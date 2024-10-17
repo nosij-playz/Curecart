@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cart</title>
+</head>
+<body>
+    <h1>Your Cart</h1>
+    <form action="{{ url_for('update_cart') }}" method="POST">
+        <table>
+            <tr>
+                <th>Medicine</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Update Quantity</th>
+            </tr>
+            {% for item, medicine in cart_items %}
+            <tr>
+                <td>{{ medicine.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ medicine.price }}</td>
+                <td>{{ item.quantity * medicine.price }}</td>
+                <td><input type="number" name="quantity_{{ item.cart_item_id }}" value="{{ item.quantity }}" min="1"></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Update Cart</button>
+    </form>
+    <a href="{{ url_for('checkout') }}">Buy Now</a>
+</body>
+</html>

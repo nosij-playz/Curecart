@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - CureCart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header-icons a {
+            color: white;
+            font-size: 24px;
+            margin-left: 15px;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        .profile-info h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .logout-btn {
+            background-color: #dc3545; /* Red color for logout */
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .order-history-btn {
+            background-color: #28a745; /* Green color for order history */
+        }
+
+        .order-history-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>CureCart</h1>
+        <div class="header-icons">
+            <a href="{{ url_for('customer_cart') }}">🛒</a>
+            <a href="{{ url_for('customer_profile') }}">👤</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="profile-info">
+            <h2>Your Profile</h2>
+            <p><strong>Customer ID:</strong> {{ customer.customer_id }}</p> <!-- Added Customer ID -->
+            <p><strong>Name:</strong> {{ customer.name }}</p>
+            <p><strong>Email:</strong> {{ customer.email }}</p>
+            <p><strong>Address:</strong> {{ customer.address }}</p>
+            <p><strong>Phone Number:</strong> {{ customer.phone_number }}</p>
+            <a href="{{ url_for('edit_profile') }}" class="btn">Edit Profile</a>
+            <a href="{{ url_for('order_history') }}" class="btn order-history-btn">Order History</a> <!-- Order History button -->
+            <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a> <!-- Logout button -->
+        </div>
+    </div>
+</body>
+
+</html>

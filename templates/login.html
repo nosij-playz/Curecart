@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Medical Shop Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('{{ url_for('static', filename='bgimg/thermometer-1539191.jpg') }}'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* Hide scrollbar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            width: 400px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007BFF;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .login-container input, .login-container select, .login-container button {
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .login-container button {
+            background-color: #28a745;
+            border: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .login-container button:hover {
+            background-color: #218838;
+        }
+        /* Create New Account button styling */
+        .btn-link {
+            display: block;
+            text-align: center;
+            color: white;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .btn-link:hover {
+            color: #f1f1f1;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+    <script>
+        function toggleCreateAccountButton() {
+            var role = document.querySelector('select[name="role"]').value;
+            var createAccountButton = document.querySelector('.btn-link');
+
+            // If "Employee" is selected, hide the Create Account button
+            if (role === 'employee') {
+                createAccountButton.style.display = 'none';
+            } else {
+                createAccountButton.style.display = 'block';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        
+        {% if error %}
+            <div class="error-message">{{ error }}</div>  <!-- Display error message if exists -->
+        {% endif %}
+        
+        <form action="/login" method="POST">
+            <label for="role">Login as:</label>
+            <select name="role" required onchange="toggleCreateAccountButton()">
+                <option value="customer">Customer</option>
+                <option value="employee">Employee</option>
+            </select>
+            <label for="username">Username:</label>
+            <input type="text" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" required>
+            <button class="btn btn-success" type="submit">Login</button>
+        </form>
+        <!-- Create New Account button styled as a link -->
+        <button class="btn-link" onclick="window.location.href='/signup'">Create New Account</button>
+    </div>
+</body>
+</html>

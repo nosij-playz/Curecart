@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            margin: 50px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px; /* Set a max width for the form */
+        }
+        h2 {
+            color: #343a40; /* Dark color for headings */
+        }
+        .btn-custom {
+            margin-top: 10px; /* Margin for buttons */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Employee</h2>
+        
+        <!-- Flash Messages Area -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/add_employee" method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select class="form-control" name="role" required>
+                    <option value="billing">Billing</option>
+                    <option value="stock">Stock</option>
+                    <option value="manager">Manager</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="salary">Salary:</label>
+                <input type="number" step="0.01" class="form-control" name="salary" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Phone Number:</label>
+                <input type="text" class="form-control" name="phone_number" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea class="form-control" name="address" required></textarea>
+            </div>
+            <button class="btn btn-success btn-custom" type="submit">Add Employee</button>
+            <a href="{{ url_for('manager') }}" class="btn btn-secondary btn-custom">Back to Manager Dashboard</a>
+        </form>
+    </div>
+</body>
+</html>

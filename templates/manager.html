@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script>
+        function toggleDetails(empId) {
+            const detailsRow = document.getElementById('details-' + empId);
+            detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+        }
+    </script>
+    <style>
+        .profile-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .banner-table {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <button class="profile-btn" onclick="window.location.href='{{ url_for('employee_profile', username=session.username) }}'">
+        👤
+    </button>
+
+    <div class="container">
+        <h1>Manager Dashboard</h1>
+        
+        <!-- Role Selection -->
+        <form method="POST" class="mb-3">
+            <div class="form-group">
+                <label for="role">Select Role:</label>
+                <select name="role" id="role" class="form-control" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="billing">Billing</option>
+                    <option value="stock">Stock</option>
+                    <option value="manager">Manager</option>
+                </select>
+            </div>
+            <button type="submit" name="show_employees" class="btn btn-primary">Show Employees</button>
+            <a href="{{ url_for('add_employee') }}" class="btn btn-success">Add Employee</a>
+        </form>
+
+        <!-- Employee List -->
+        <h2>Employees</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Salary</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee, details in employees %}
+                <tr>
+                    <td>{{ employee.username }}</td>
+                    <td>{{ employee.role }}</td>
+                    <td>₹{{ employee.salary }}</td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="toggleDetails({{ employee.employee_id }})">Show Details</button>
+                        <form action="{{ url_for('update_role') }}" method="POST" style="display:inline;">
+                            <input type="hidden" name="emp_id" value="{{ employee.employee_id }}">
+                            <select name="new_role" required>
+                                <option value="{{ employee.role }}">{{ employee.role }}</option>
+                                <option value="billing">Billing</option>
+                                <option value="stock">Stock</option>
+                                <option value="manager">Manager</option>
+                            </select>
+                            <button type="submit" class="btn btn-warning">Update Role</button>
+                        </form>
+                        <form action="{{ url_for('update_salary') }}" method="POST" style="display:inline;">
+                            <input type="hidden" name="emp_id" value="{{ employee.employee_id }}">
+                            <input type="number" name="new_salary" required min="0" step="0.01" placeholder="New Salary" style="width:100px;">
+                            <button type="submit" class="btn btn-info">Update Salary</button>
+                        </form>
+                        <form action="{{ url_for('remove_employee') }}" method="POST">
+                            <input type="hidden" name="emp_id" value="{{ employee.employee_id }}">
+                            <button type="submit" class="btn btn-danger">Remove Employee</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr id="details-{{ employee.employee_id }}" style="display:none;">
+                    <td colspan="4">
+                        <strong>Email:</strong> {{ details.email if details else 'N/A' }}<br>
+                        <strong>Phone Number:</strong> {{ details.phone_number if details else 'N/A' }}<br>
+                        <strong>Address:</strong> {{ details.address if details else 'N/A' }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+<!-- Existing Banner Management Section in manager.html -->
+<h2>Manage Banners</h2>
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="image_file">Select Image:</label>
+        <input type="file" class="form-control-file" id="image_file" name="image_file" accept="image/*" required>
+    </div>
+    <button type="submit" name="upload_banner" class="btn btn-primary">Upload Banner</button>
+</form>
+
+<!-- Display Existing Banners -->
+<h3>Existing Banners</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Banner Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for banner in banners %}
+        <tr>
+            <td>
+                <a href="{{ url_for('serve_banner', banner_id=banner.banner_id) }}" target="_blank" style="text-decoration: underline;">
+                    {{ banner.image_name }}
+                </a>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('manager') }}">
+                    <input type="hidden" name="banner_id" value="{{ banner.banner_id }}">
+                    <button type="submit" name="delete_banner" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>    </div>
+</body>
+</html>

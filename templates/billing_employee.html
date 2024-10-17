@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Employee Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9ecef;
+        }
+        .billing-container {
+            padding: 20px;
+            background-color: #fff;
+            margin: 50px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 800px; 
+            display: flex; 
+            flex-direction: row; 
+            justify-content: space-between; 
+        }
+        .form-container {
+            flex: 1; 
+            margin-right: 20px; 
+        }
+        .cart-summary {
+            flex-basis: 300px; 
+            max-width: 300px; 
+        }
+        .billing-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .billing-container input, .billing-container button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .profile-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-btn:hover {
+            background-color: #0056b3;
+        }
+        .proceed-btn {
+            background-color: #28a745; /* Green button */
+            color: white; /* White text */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding */
+            cursor: pointer; /* Pointer cursor */
+            transition: background-color 0.3s; /* Smooth transition */
+            width: auto; /* Auto width for smaller button */
+            align-self: flex-start; /* Align button to the start */
+        }
+        .proceed-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+        .customer-id-container {
+            margin-top: 20px; /* Add margin for spacing */
+        }
+        /* Add custom style for small input */
+        .small-input {
+            width: 150px; /* Set a fixed width for the small input box */
+        }
+        /* Suggestions list style */
+        .suggestions {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            z-index: 1000;
+            background: white;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button class="profile-btn" onclick="window.location.href='{{ url_for('employee_profile') }}'">
+        👤
+    </button>
+
+    <div class="billing-container">
+        <div class="form-container">
+            <h2>Billing Employee Dashboard</h2>
+            
+            <!-- Flash Messages Area -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} mt-2">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Error Message Area -->
+            {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+            {% endif %}
+
+            <!-- Form to Add Medicines -->
+            <form action="/billing_employee" method="POST">
+                <div class="form-group">
+                    <label for="medicine_name">Enter Medicine Name:</label>
+                    <input type="text" class="form-control" name="medicine_name" id="medicine_name" required autocomplete="off">
+                    <div id="suggestions" class="suggestions" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" class="form-control" name="quantity" required min="1">
+                </div>
+                <button class="btn btn-success" type="submit">Add to Cart</button>
+            </form>
+        </div>
+
+        <div class="cart-summary">
+            <h4>Cart Summary</h4>
+            <ul id="cartItems" class="list-group">
+                <!-- Populate cart items -->
+                {% for item in cart_items %}
+                <li class="list-group-item">
+                    <div>
+                        <strong>{{ item.name }}</strong> - ₹{{ item.price }} x {{ item.quantity }}
+                        <form action="/remove_item" method="POST" style="display:inline;">
+                            <input type="hidden" name="item_name" value="{{ item.name }}">
+                            <button class="btn btn-danger btn-sm" type="submit">Remove</button>
+                        </form>
+                    </div>
+                    <span>₹{{ item.price * item.quantity }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <h5>Total: ₹<span id="cartTotal">{{ total }}</span></h5>
+            <form action="/checkout" method="POST" style="display:inline;">
+                <button class="btn btn-primary" type="submit">Proceed to Checkout</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer ID Input Field -->
+    <div class="customer-id-container">
+        <h4>Proceed with Customer Cart</h4>
+        <form action="{{ url_for('checkout2') }}" method="POST">
+            <div class="form-group">
+                <label for="customer_id">Enter Customer ID:</label>
+                <input type="text" class="form-control small-input" id="customer_id" name="customer_id" required>
+            </div>
+            <button class="proceed-btn" type="submit">
+                Proceed to Customer Dashboard
+            </button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#medicine_name').on('input', function() {
+                let query = $(this).val();
+                if (query.length > 0) { // Change to > 0 to show suggestions immediately
+                    $.ajax({
+                        url: '/medicine_suggestions',
+                        data: { query: query },
+                        success: function(data) {
+                            $('#suggestions').empty().show();
+                            if (data.length > 0) {
+                                data.forEach(function(item) {
+                                    $('#suggestions').append('<div class="suggestion-item" data-name="' + item.name + '">' + item.name + '</div>');
+                                });
+                            } else {
+                                $('#suggestions').hide(); // Hide if no results
+                            }
+                        }
+                    });
+                } else {
+                    $('#suggestions').hide(); // Hide suggestions if input is empty
+                }
+            });
+
+            $(document).on('click', '.suggestion-item', function() {
+                $('#medicine_name').val($(this).data('name'));
+                $('#suggestions').hide();
+            });
+
+            $(document).click(function(e) {
+                if (!$(e.target).closest('#suggestions').length && !$(e.target).is('#medicine_name')) {
+                    $('#suggestions').hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

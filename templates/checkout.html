@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        h2 {
+            text-align: right;
+            color: #007BFF;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .insufficient-stock {
+            color: red;
+        }
+        .text-success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkout</h1>
+    <table>
+        <tr>
+            <th>Medicine</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Stock Status</th>
+        </tr>
+        {% for item, medicine, stock in cart_items %}
+        <tr>
+            <!-- Fetch the medicine name from the 'Medicines' table -->
+            <td>{{ medicine.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ stock.price }}</td>
+            <td>₹{{ item.quantity * stock.price }}</td>
+            <td>
+                {% if item.quantity > stock.quantity %}
+                    <span class="insufficient-stock">Not enough stock (Available: {{ stock.quantity }})</span>
+                {% else %}
+                    <span class="text-success">In stock</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Total: ₹{{ total }}</h2>
+
+    {% if not insufficient_stock %}
+        <form action="{{ url_for('confirm_purchase') }}" method="POST">
+            <button type="submit">Confirm Purchase</button>
+            <a href="{{ url_for('cancel_purchase') }}">Cancel</a>
+        </form>
+    {% else %}
+        <p style="color: red;">Unable to confirm purchase due to insufficient stock.</p>
+    {% endif %}
+</body>
+</html>

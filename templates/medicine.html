@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicines - CureCart</title>
+</head>
+<body>
+    <h1>Available Medicines</h1>
+    <ul>
+        {% for medicine in medicines %}
+        <li>
+            <h2>{{ medicine.name }}</h2>
+            <p>{{ medicine.description }}</p>
+            <p>Manufacturer: {{ medicine.manufacturer }}</p>
+            <p>Price: ₹{{ medicine.price }}</p> <!-- Make sure price is available -->
+            <img src="{{ medicine.image }}" alt="{{ medicine.name }}">
+            <form action="{{ url_for('add_to_cart', medicine_id=medicine.medicine_id) }}" method="post">
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Add to Cart</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

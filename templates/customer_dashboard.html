@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - CureCart</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('{{ url_for('static', filename='bgimg/gel-capsules-58340223.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f8f9fa;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-icons input {
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .header-icons input:focus {
+            border-color: #00c6ff;
+            box-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
+        }
+
+        .header-icons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: white;
+            color: #007bff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .header-icons button:hover {
+            background-color: #00c6ff;
+            color: white;
+        }
+
+        .header-icons a {
+            font-size: 24px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .header-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: 2rem;
+            margin: 30px 0;
+            color: #0d4a6b; /* Darker color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .banner-container {
+            position: relative;
+            max-width: 70%;
+            margin: 20px auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .banner {
+            display: none;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .banner.active {
+            display: block;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #00c6ff, #007bff);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 280px;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h5 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            margin: 0 10px 15px;
+            font-size: 1.2rem;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: white;
+            border-radius: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .card a:hover {
+            background-color: #00c6ff;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+            width: 100%;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: calc(50% - 40px);
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .welcome-message {
+                text-align: center;
+                font-size: 2rem;
+                color: #0d4a6b; /* Darker color */
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6), 0 0 10px rgba(224, 247, 250, 0.5);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: calc(100% - 40px);
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .welcome-message {
+                font-size: 1.2rem;
+            }
+        }
+
+        .no-medicines {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.8rem;
+            color: #ff5050;
+            font-weight: bold;
+        }
+
+        .available-medicines-heading {
+            width: 100%;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 2.5rem;
+            color: #0d4a6b; /* Darker color */
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>CureCart</h1>
+        <div class="header-icons">
+            <form method="GET" action="{{ url_for('customer_dashboard') }}">
+                <input type="text" name="query" placeholder="Search for medicines" value="{{ request.args.get('query', '') }}">
+                <button type="submit">Search</button>
+            </form>
+            <a href="{{ url_for('customer_cart') }}">🛒</a>
+            <a href="{{ url_for('customer_profile') }}">👤</a>
+        </div>
+    </div>
+
+    <div class="welcome-message">
+        Welcome, {{ customer_name }}!
+    </div>
+
+    <div class="banner-container">
+        {% for banner in banners %}
+        <img class="banner {% if loop.index == 1 %}active{% endif %}" src="{{ url_for('static', filename='banner/' + banner.image_name) }}" alt="Banner {{ loop.index }}">
+        {% endfor %}
+    </div>
+
+    <div class="card-container">
+        <h2 class="available-medicines-heading">Available Medicines</h2>
+        {% if no_medicines_found %}
+            <div class="no-medicines">Currently Unavailable</div>
+        {% else %}
+            {% for medicine in medicines %}
+            <div class="card">
+                <h5>{{ medicine.name }}</h5>
+                <p>Description: {{ medicine.description }}</p>
+                <a href="{{ url_for('medicine_details', medicine_id=medicine.medicine_id) }}">View Details</a>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <footer>
+        &copy; 2024 CureCart. All rights reserved.
+    </footer>
+
+    <script>
+        let currentBanner = 0;
+        const banners = document.querySelectorAll('.banner');
+        const totalBanners = banners.length;
+
+        function showNextBanner() {
+            banners[currentBanner].classList.remove('active');
+            currentBanner = (currentBanner + 1) % totalBanners;
+            banners[currentBanner].classList.add('active');
+        }
+
+        setInterval(showNextBanner, 3000);
+    </script>
+</body>
+
+</html>
