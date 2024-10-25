@@ -8,11 +8,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e9ecef;
+            background-image: url('{{ url_for('static', filename='/bgimg/img2.jpg') }}'); /* Background image */
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* No repeating of the image */
+            color: #343a40; /* Text color for readability */
         }
         .stock-manager-container {
             padding: 20px;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for readability */
             margin: 50px auto;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);

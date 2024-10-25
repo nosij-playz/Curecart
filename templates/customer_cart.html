@@ -8,10 +8,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image: url('{{ url_for('static', filename='bgimg/img.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             color: #333;
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
         h1 {
             text-align: center;
@@ -75,7 +79,7 @@
             display: block;
         }
         .checkout-button {
-            background-color: #007BFF; /* Blue */
+            background-color: #007BFF;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -84,10 +88,10 @@
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            margin-top: 20px; /* Space above the button */
+            margin-top: 20px;
         }
         .checkout-button:hover {
-            background-color: #0056b3; /* Darker blue */
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -129,7 +133,7 @@
             <h2 class="total-price">Total Price: ₹{{ total_price }}</h2>
             <button type="submit">Update Cart</button>
             <a href="{{ url_for('customer_dashboard') }}" class="btn">Continue Shopping</a>
-            <a href="{{ url_for('checkout1') }}" class="checkout-button">Checkout</a> <!-- Checkout button -->
+            <a href="{{ url_for('checkout1') }}" class="checkout-button">Checkout</a>
         </form>
     {% else %}
         <p>Your cart is empty.</p>

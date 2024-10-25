@@ -7,10 +7,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image: url('{{ url_for('static', filename='/bgimg/img.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: #333;
             margin: 0;
             padding: 20px;
+            height: 100vh;
         }
         h1 {
             text-align: center;
@@ -18,9 +23,11 @@
         }
         table {
             width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
             border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 5px;
             overflow: hidden;
         }
@@ -39,6 +46,7 @@
         h2 {
             text-align: right;
             color: #007BFF;
+            margin-right: 20px;
         }
         button {
             background-color: #28a745;
@@ -58,44 +66,52 @@
         .text-success {
             color: green;
         }
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Checkout</h1>
-    <table>
-        <tr>
-            <th>Medicine</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Stock Status</th>
-        </tr>
-        {% for item, medicine, stock in cart_items %}
-        <tr>
-            <!-- Fetch the medicine name from the 'Medicines' table -->
-            <td>{{ medicine.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>₹{{ stock.price }}</td>
-            <td>₹{{ item.quantity * stock.price }}</td>
-            <td>
-                {% if item.quantity > stock.quantity %}
-                    <span class="insufficient-stock">Not enough stock (Available: {{ stock.quantity }})</span>
-                {% else %}
-                    <span class="text-success">In stock</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <h2>Total: ₹{{ total }}</h2>
+    <div class="content-wrapper">
+        <h1>Checkout</h1>
+        <table>
+            <tr>
+                <th>Medicine</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Stock Status</th>
+            </tr>
+            {% for item, medicine, stock in cart_items %}
+            <tr>
+                <td>{{ medicine.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ stock.price }}</td>
+                <td>₹{{ item.quantity * stock.price }}</td>
+                <td>
+                    {% if item.quantity > stock.quantity %}
+                        <span class="insufficient-stock">Not enough stock (Available: {{ stock.quantity }})</span>
+                    {% else %}
+                        <span class="text-success">In stock</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <h2>Total: ₹{{ total }}</h2>
 
-    {% if not insufficient_stock %}
-        <form action="{{ url_for('confirm_purchase') }}" method="POST">
-            <button type="submit">Confirm Purchase</button>
-            <a href="{{ url_for('cancel_purchase') }}">Cancel</a>
-        </form>
-    {% else %}
-        <p style="color: red;">Unable to confirm purchase due to insufficient stock.</p>
-    {% endif %}
+        {% if not insufficient_stock %}
+            <form action="{{ url_for('confirm_purchase') }}" method="POST">
+                <button type="submit">Confirm Purchase</button>
+                <a href="{{ url_for('cancel_purchase') }}">Cancel</a>
+            </form>
+        {% else %}
+            <p style="color: red;">Unable to confirm purchase due to insufficient stock.</p>
+        {% endif %}
+    </div>
 </body>
 </html>

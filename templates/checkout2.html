@@ -5,63 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <style>
+        /* General body styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image: url('{{ url_for('static', filename='/bgimg/img2.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: #333;
             margin: 0;
             padding: 20px;
+            height: 100vh;
         }
+
+        /* Main title styles */
         h1 {
-            text-align: center;
-            color: #007BFF;
+            text-align: center; /* Center the title */
+            color: #007BFF; /* Blue color for the title */
         }
+
+        /* Table styles */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
-            border-radius: 5px;
-            overflow: hidden;
+            width: 100%; /* Full width table */
+            border-collapse: collapse; /* Collapse borders */
+            margin: 20px 0; /* Margin around the table */
+            background-color: #fff; /* White background for the table */
+            border-radius: 5px; /* Rounded corners for the table */
+            overflow: hidden; /* Hide overflow */
         }
+
+        /* Table header and data styles */
         th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 12px; /* Padding in cells */
+            text-align: left; /* Align text to the left */
+            border-bottom: 1px solid #ddd; /* Light gray bottom border */
         }
+
         th {
-            background-color: #007BFF;
-            color: white;
+            background-color: #007BFF; /* Blue background for headers */
+            color: white; /* White text for headers */
         }
+
+        /* Row hover effect */
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #f1f1f1; /* Light gray background on hover */
         }
+
+        /* Subtotal title styles */
         h2 {
-            text-align: right;
-            color: #007BFF;
+            text-align: right; /* Align subtotal to the right */
+            color: #007BFF; /* Blue color for subtotal */
         }
+
+        /* Button styles */
         button {
-            background-color: #28a745;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            background-color: #28a745; /* Green background for button */
+            color: white; /* White text color */
+            padding: 8px 12px; /* Padding for button */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners for button */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth background color transition */
         }
+
+        /* Button hover effect */
         button:hover {
-            background-color: #218838;
+            background-color: #218838; /* Darker green on hover */
         }
+
+        /* Insufficient stock warning styles */
         .insufficient-stock {
-            color: red;
+            color: red; /* Red text for insufficient stock */
         }
+
+        /* Success message styles */
         .text-success {
-            color: green;
+            color: green; /* Green text for in-stock items */
         }
     </style>
 </head>
 <body>
     <h1>Checkout</h1>
+
+    <!-- Checkout table -->
     <table>
         <tr>
             <th>Medicine</th>
@@ -70,13 +97,13 @@
             <th>Total</th>
             <th>Stock Status</th>
         </tr>
+        <!-- Loop through cart items to display each item -->
         {% for item, medicine, stock in cart_items %}
         <tr>
-            <!-- Fetch the medicine name from the 'Medicines' table -->
-            <td>{{ medicine.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>₹{{ stock.price }}</td>
-            <td>₹{{ item.quantity * stock.price }}</td>
+            <td>{{ medicine.name }}</td> <!-- Medicine name -->
+            <td>{{ item.quantity }}</td> <!-- Quantity of medicine -->
+            <td>₹{{ stock.price }}</td> <!-- Price per unit -->
+            <td>₹{{ item.quantity * stock.price }}</td> <!-- Total price -->
             <td>
                 {% if item.quantity > stock.quantity %}
                     <span class="insufficient-stock">Not enough stock (Available: {{ stock.quantity }})</span>
@@ -87,8 +114,11 @@
         </tr>
         {% endfor %}
     </table>
+
+    <!-- Total amount display -->
     <h2>Total: ₹{{ total }}</h2>
 
+    <!-- Confirm purchase button if stock is sufficient -->
     {% if not insufficient_stock %}
         <form action="{{ url_for('confirm_purchasebill') }}" method="POST">
             <button type="submit">Confirm Purchase</button>

@@ -8,7 +8,10 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(to right, #e0f7fa, #ffebee);
+            background-image: url('{{ url_for('static', filename='/bgimg/img.png') }}');
+            background-size: cover; /* Ensures the background image covers the whole area */
+            background-position: center; /* Centers the background image */
+            background-repeat: no-repeat; /* Prevents the background image from repeating */
             color: #333;
             margin: 0;
             padding: 0;
@@ -18,7 +21,7 @@
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for better readability */
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
@@ -109,6 +112,7 @@
             border-radius: 5px;
             text-align: center;
         }
+
         .alert-success {
             background-color: #28a745;
         }

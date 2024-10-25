@@ -9,21 +9,24 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-image: url('{{ url_for('static', filename='/bgimg/img.png') }}'); /* Background image */
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* No repeating of the image */
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            background-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.8); /* Slightly transparent blue */
             color: white;
         }
         .container {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for readability */
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
@@ -78,8 +81,8 @@
                 <td>{{ order.order_id }}</td>
                 <td>{{ medicine_name }}</td>
                 <td>{{ order.quantity }}</td>
-                <td>{{ order.price }}</td>
-                <td>{{ order.total }}</td>
+                <td>₹{{ order.price }}</td>  <!-- Assuming price is a number -->
+                <td>₹{{ order.total }}</td>  <!-- Assuming total is a number -->
                 <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
             </tr>
             {% endfor %}

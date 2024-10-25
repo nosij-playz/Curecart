@@ -12,6 +12,14 @@
         }
     </script>
     <style>
+        body {
+            background-image: url('{{ url_for('static', filename='/bgimg/img2.jpg') }}');
+            background-size: cover; /* Ensures the background image covers the whole area */
+            background-position: center; /* Centers the background image */
+            background-repeat: no-repeat; /* Prevents the background image from repeating */
+            font-family: Arial, sans-serif; /* Sets a default font for better readability */
+        }
+
         .profile-btn {
             position: fixed;
             top: 20px;
@@ -33,12 +41,21 @@
             background-color: #0056b3;
         }
 
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Adds a white background with transparency to the container */
+            padding: 20px; /* Adds padding for better spacing */
+            border-radius: 8px; /* Rounds the corners of the container */
+            margin-top: 50px; /* Adds space from the top of the page */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+        }
+
         .banner-table {
             margin-top: 30px;
         }
     </style>
 </head>
 <body>
+    <!-- Profile Button to navigate to Employee Profile -->
     <button class="profile-btn" onclick="window.location.href='{{ url_for('employee_profile', username=session.username) }}'">
         👤
     </button>
@@ -46,7 +63,7 @@
     <div class="container">
         <h1>Manager Dashboard</h1>
         
-        <!-- Role Selection -->
+        <!-- Role Selection Form -->
         <form method="POST" class="mb-3">
             <div class="form-group">
                 <label for="role">Select Role:</label>
@@ -61,7 +78,7 @@
             <a href="{{ url_for('add_employee') }}" class="btn btn-success">Add Employee</a>
         </form>
 
-        <!-- Employee List -->
+        <!-- Employee List Section -->
         <h2>Employees</h2>
         <table class="table">
             <thead>
@@ -95,7 +112,7 @@
                             <input type="number" name="new_salary" required min="0" step="0.01" placeholder="New Salary" style="width:100px;">
                             <button type="submit" class="btn btn-info">Update Salary</button>
                         </form>
-                        <form action="{{ url_for('remove_employee') }}" method="POST">
+                        <form action="{{ url_for('remove_employee') }}" method="POST" style="display:inline;">
                             <input type="hidden" name="emp_id" value="{{ employee.employee_id }}">
                             <button type="submit" class="btn btn-danger">Remove Employee</button>
                         </form>
@@ -112,42 +129,43 @@
             </tbody>
         </table>
 
-<!-- Existing Banner Management Section in manager.html -->
-<h2>Manage Banners</h2>
-<form method="POST" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="image_file">Select Image:</label>
-        <input type="file" class="form-control-file" id="image_file" name="image_file" accept="image/*" required>
-    </div>
-    <button type="submit" name="upload_banner" class="btn btn-primary">Upload Banner</button>
-</form>
+        <!-- Banner Management Section -->
+        <h2>Manage Banners</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="image_file">Select Image:</label>
+                <input type="file" class="form-control-file" id="image_file" name="image_file" accept="image/*" required>
+            </div>
+            <button type="submit" name="upload_banner" class="btn btn-primary">Upload Banner</button>
+        </form>
 
-<!-- Display Existing Banners -->
-<h3>Existing Banners</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Banner Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for banner in banners %}
-        <tr>
-            <td>
-                <a href="{{ url_for('serve_banner', banner_id=banner.banner_id) }}" target="_blank" style="text-decoration: underline;">
-                    {{ banner.image_name }}
-                </a>
-            </td>
-            <td>
-                <form method="POST" action="{{ url_for('manager') }}">
-                    <input type="hidden" name="banner_id" value="{{ banner.banner_id }}">
-                    <button type="submit" name="delete_banner" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>    </div>
+        <!-- Display Existing Banners -->
+        <h3>Existing Banners</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Banner Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for banner in banners %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('serve_banner', banner_id=banner.banner_id) }}" target="_blank" style="text-decoration: underline;">
+                            {{ banner.image_name }}
+                        </a>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('manager') }}">
+                            <input type="hidden" name="banner_id" value="{{ banner.banner_id }}">
+                            <button type="submit" name="delete_banner" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
